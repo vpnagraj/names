@@ -1,0 +1,17 @@
+{
+    "contents" : "---\ntitle: \"Post-Shiny Developer Conference Perspectives on Shiny\"\nauthor: \"VP Nagraj\"\ndate: \"February 1, 2016\"\noutput: html_document\nruntime: shiny\n---\n\nThis past weekend I was fortunate enough to be able to participate in the [first ever Shiny Developer Conference hosted by RStudio at Stanford University](http://blog.rstudio.org/2015/10/29/shiny-developer-conference-stanford-university-january-2016/). I'll do my best to keep this post from sounding like a sales pitch ... but **yes** it was awesome. I've built a handful of apps, and have even taught an introductory workshop on Shiny. In spite of that, almost all of the presentations de-mystified at least one aspect of the *how*, *when* or *so-what* of the framework. Here's a recap of \n\n## reactivity is a beast\n\n\n- example of grupo \n\n- options(shiny.reactlog)\n\n```{r, echo = TRUE}\nshinyApp(\n  \n  ui = fluidPage(\n    selectInput(\"region\", \"Region:\", \n                choices = colnames(WorldPhones)),\n    plotOutput(\"phonePlot\")\n  ),\n  \n  server = function(input, output) {\n    output$phonePlot <- renderPlot({\n      barplot(WorldPhones[,input$region]*1000, \n              ylab = \"Number of Telephones\", xlab = \"Year\")\n    })\n  },\n  \n  options = list(height = 500)\n)\n```\n\n\n## javascript isn't cheating\n\nFor whatever reason I've been stuck on the idea that using JavaScript inside a Shiny app is \"cheating\".  But Shiny is actually well-suited for binding with JavaScript libraries. And several of the talks \n- shinyjs\n- yihui DT talk and possibilities of client-side processing\n- friss analytics talk \n\n```{r, evale = FALSE, echo = TRUE}\nlibrary(shiny)\nlibrary(shinyjs)\nshinyApp(\n  \n  ui <- fluidPage(\n        useShinyjs(rmd = TRUE),\n        actionButton(\"start\", \"start the game\"),\n        hidden(actionButton(\"restart\", \"restart the game\")),\n        tags$h3(hidden(textOutput(\"game_over\")))\n  ),\n  \n  server <- function(input, output) {\n      \n        output$game_over <-\n            renderText({\n                \"game over, man ... game over\"\n            })  \n        \n       observeEvent(input$start, {\n\n            show(\"game_over\", anim = TRUE, animType = \"fade\")\n            hide(\"start\")\n            show(\"restart\")\n        })\n       \n       observeEvent(input$restart, {\n\n            hide(\"game_over\")\n            hide(\"restart\")\n            show(\"start\")\n        })\n     \n  }\n)\n```\n\n## shiny can't do everything ... at least not yet\n\n- cost of implementing shiny short term vs. cost of implementing in the long run\n- scaling massive shiny apps\n    - shinymodules()\n    \n- rstudioconnect\n\n## all the \"things\"\n\n- profvis\n- brushing\n- req() feature\n- gadgets\n- shinyURL\n- all the shiny argumnents i never noticed\n\n## TL;DR\n\n- Reactivity is fundamental to what makes Shiny worth using / Reactivity is fundamental to what makes Shiny hard for R developers to learn.\n",
+    "created" : 1454451658827.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1058796919",
+    "id" : "335EE4A9",
+    "lastKnownWriteTime" : 1454452898,
+    "path" : "~/Desktop/shinyconf/shinydevconpost.Rmd",
+    "project_path" : null,
+    "properties" : {
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "type" : "r_markdown"
+}
