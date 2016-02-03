@@ -18,22 +18,30 @@ server <- function(input, output) {
     
     dat <- eventReactive(input$go, {
         
+        # create total number of records per year to calculate proprotion
+        d <- ssa_national %>%
+            group_by(year) %>%
+            summarise(n = n())
+        
         # filter ssa_national object that was loaded in genderdata package
+        # join with object created above and calculate proportion
         ssa_national %>%   
             filter(name == tolower(input$name)) %>%
-            mutate(total = male + female)
+            mutate(total = male + female) %>%
+            left_join(d) %>%
+            mutate(prop = total / n) 
         
     })
     
     output$plot1 <- renderPlot({
         
-        ggplot(dat(), aes(year, total, col=name)) + 
+        ggplot(dat(), aes(year, prop, col=name)) + 
             geom_line() + 
             xlim(1880,2012) +
             theme_minimal() +
-            labs(list(title = "",
-                      x = "year \n \n click-and-drag over the plot to 'zoom'",
-                      y = "n individuals"))
+            labs(list(title ="% of individuals born with name by year",
+                      x = "\n click-and-drag over the plot to 'zoom'",
+                      y = ""))
         
     })
     
@@ -43,12 +51,12 @@ server <- function(input, output) {
         req(input$plot_brush)
         brushed <- brushedPoints(dat(), input$plot_brush)
         
-        ggplot(brushed, aes(year, total, col = name)) + 
+        ggplot(brushed, aes(year, prop, col = name)) + 
             geom_line() +
             theme_minimal() +
-            labs(list(title = "",
-                      x = "year",
-                      y = "n individuals"))
+            labs(list(title ="% of individuals born with name by year",
+                      x = "",
+                      y = ""))
         
     })
     
