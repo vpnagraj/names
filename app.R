@@ -1,12 +1,13 @@
-# install.packages("genderdata", repos = "http://packages.ropensci.org")
-library(genderdata)
 library(shiny)
-library(dplyr)
 library(ggplot2)
 library(ggthemes)
+library(babynames)
+library(scales)
+
+options(scipen=999)
 
 ui <- fluidPage(titlePanel(title = "names (1880-2012)"),
-                textInput("name", "enter a name", value = "prince"),
+                textInput("name", "enter a name"),
                 actionButton("go", "search"),
                 plotOutput("plot1", brush = "plot_brush"),
                 plotOutput("plot2"),
@@ -18,28 +19,19 @@ server <- function(input, output) {
     
     dat <- eventReactive(input$go, {
         
-        # create total number of records per year to calculate proprotion
-        d <- ssa_national %>%
-            group_by(year) %>%
-            summarise(n = n())
-        
-        # filter ssa_national object that was loaded in genderdata package
-        # join with object created above and calculate proportion
-        ssa_national %>%   
-            filter(name == tolower(input$name)) %>%
-            mutate(total = male + female) %>%
-            left_join(d) %>%
-            mutate(prop = total / n) 
+        subset(babynames, tolower(name) == tolower(input$name))
         
     })
     
     output$plot1 <- renderPlot({
         
-        ggplot(dat(), aes(year, prop, col=name)) + 
+        ggplot(dat(), aes(year, prop, col=sex)) + 
             geom_line() + 
             xlim(1880,2012) +
             theme_minimal() +
-            labs(list(title ="% of individuals born with name by year",
+            # format labels with percent function from scales package
+            scale_y_continuous(labels = percent) +
+            labs(list(title ="% of individuals born with name by year and gender",
                       x = "\n click-and-drag over the plot to 'zoom'",
                       y = ""))
         
@@ -51,10 +43,12 @@ server <- function(input, output) {
         req(input$plot_brush)
         brushed <- brushedPoints(dat(), input$plot_brush)
         
-        ggplot(brushed, aes(year, prop, col = name)) + 
+        ggplot(brushed, aes(year, prop, col=sex)) + 
             geom_line() +
             theme_minimal() +
-            labs(list(title ="% of individuals born with name by year",
+            # format labels with percent function from scales package
+            scale_y_continuous(labels = percent) +
+            labs(list(title ="% of individuals born with name by year and gender",
                       x = "",
                       y = ""))
         
@@ -62,7 +56,7 @@ server <- function(input, output) {
     
     output$info <- renderText({
         
-        "<p>data source: <a href='https://github.com/ropensci/genderdata'>social security administration names from genderdata package</a></p>"
+        "<p>data source: <a href='https://github.com/hadley/babynames'>social security administration names from babynames package</a></p>"
         
     })
     
