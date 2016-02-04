@@ -12,6 +12,7 @@ install.packages("shiny")
 install.packages("ggplot2")
 install.packages("ggthemes")
 install.packages("babynames")
+install.packages("scales")
 
 shiny::runGitHub('names', 'vpnagraj') 
 ```
