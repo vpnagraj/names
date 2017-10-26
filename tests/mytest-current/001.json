@@ -1,0 +1,58 @@
+{
+  "input": {
+    "go": 1,
+    "name": "Hadley"
+  },
+  "output": {
+    "info": "<p>data source: <a href='https://github.com/hadley/babynames'>social security administration names from babynames package<\/a><\/p>",
+    "plot1": {
+      "src": "[image data sha1: e3ef560f72d3294dd4d37232e4c6e03f54f222ac]",
+      "width": 962,
+      "height": 400,
+      "coordmap": [
+        {
+          "panel": 1,
+          "row": 1,
+          "col": 1,
+          "panel_vars": {
+
+          },
+          "scale_x": 1,
+          "scale_y": 1,
+          "log": {
+            "x": null,
+            "y": null
+          },
+          "domain": {
+            "left": 1873.4,
+            "right": 2018.6,
+            "bottom": -7.40649595657301e-05,
+            "top": 0.00162103896858794
+          },
+          "mapping": {
+            "x": "year",
+            "y": "prop",
+            "colour": "sex"
+          },
+          "range": {
+            "left": 48.7163882843436,
+            "right": 907.072913459405,
+            "bottom": 355.530956092064,
+            "top": 24.0290131340161
+          }
+        }
+      ]
+    },
+    "plot2": {
+      "message": "",
+      "call": "NULL",
+      "type": [
+        "shiny.silent.error",
+        "validation"
+      ]
+    }
+  },
+  "export": {
+
+  }
+}
